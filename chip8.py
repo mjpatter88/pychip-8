@@ -4,7 +4,7 @@ DISPLAY_HEIGHT = 32
 DEBUG = False
 
 class Chip8:
-    def __init__(self, rom_file="ZeroDemo_zeroZshadow_2007.ch8"):
+    def __init__(self, rom_file="ibm-logo.ch8"):
         # 0x000-0x1FF - Chip 8 interpreter (contains font set in emu)
         # 0x050-0x0A0 - Used for the built in 4x5 pixel font set (0-F)
         # 0x200-0xFFF - Program ROM and work RAM
@@ -13,9 +13,7 @@ class Chip8:
         # Black and white display. 64 x 32 pixels (2048 total)
         # 0 - off
         # 1 - on
-        self.video_memory = []
-        for row in range(DISPLAY_HEIGHT):
-            self.video_memory.append([0] * DISPLAY_WIDTH)
+        self.video_memory = self.gen_blank_video_memory()
         self.should_draw = False
 
         # V0, V1,,, VE
@@ -76,7 +74,6 @@ class Chip8:
         instr(self.opcode)
 
         # Update timers
-        pass
 
 
     def decode(self, opcode):
@@ -84,6 +81,8 @@ class Chip8:
             return self.disp_clear
         elif (opcode & 0xF000) == 0x6000:
             return self.set_register_const
+        elif (opcode & 0xF000) == 0x7000:
+            return self.add_register_const
         elif (opcode & 0xF000) == 0xA000:
             return self.set_index
         elif (opcode & 0xF000) == 0xD000:
@@ -93,7 +92,7 @@ class Chip8:
 
     def disp_clear(self, _):
         print("Clear Display")
-        self.video_memory = [0] * 2048
+        self.video_memory = self.gen_blank_video_memory()
         self.should_draw = True
         self.pc += 2
 
@@ -108,6 +107,20 @@ class Chip8:
             print(format(opcode, '02x'))
             print(f"Register Index: {reg_index}")
             print(f"Constant Value: {const}")
+            print()
+
+    def add_register_const(self, opcode):
+        print("Add Constant to Register")
+        reg_index = (opcode & 0x0F00) >> 8
+        const = opcode & 0x00FF
+        self.registers[reg_index] += const
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register Index: {reg_index}")
+            print(f"Constant Value: {const}")
+            print()
 
     def set_index(self, opcode):
         print("Set Index")
@@ -118,6 +131,7 @@ class Chip8:
         if DEBUG:
             print(format(opcode, '02x'))
             print(f"Constant Value: {const}")
+            print()
 
     def draw_sprite(self, opcode):
         print("Draw Sprite")
@@ -145,8 +159,14 @@ class Chip8:
             print(f"X: {x}")
             print(f"Y: {y}")
             print(f"Height: {height}")
+            print()
 
     def not_implemented_instr(self, opcode):
         print(f"Not implemented opcode: {format(opcode, '02x')}")
         self.pc += 2
 
+    def gen_blank_video_memory(self):
+        video_memory = []
+        for row in range(DISPLAY_HEIGHT):
+            video_memory.append([0] * DISPLAY_WIDTH)
+        return video_memory
