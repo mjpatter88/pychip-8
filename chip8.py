@@ -79,6 +79,8 @@ class Chip8:
             return self.disp_clear
         elif (opcode & 0xF000) == 0x6000:
             return self.set_register_const
+        elif (opcode & 0xF000) == 0xA000:
+            return self.set_index
         else:
             return self.not_implemented_instr
 
@@ -98,6 +100,16 @@ class Chip8:
         if DEBUG:
             print(format(opcode, '02x'))
             print(f"Register Index: {reg_index}")
+            print(f"Constant Value: {const}")
+
+    def set_index(self, opcode):
+        print("Set Index")
+        const = opcode & 0x0FFF
+        self.index = const
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
             print(f"Constant Value: {const}")
 
     def not_implemented_instr(self, opcode):
