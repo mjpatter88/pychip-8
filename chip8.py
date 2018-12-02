@@ -1,3 +1,6 @@
+from utils import byte_to_bits
+DISPLAY_WIDTH = 64
+DISPLAY_HEIGHT = 32
 DEBUG = False
 
 class Chip8:
@@ -10,7 +13,9 @@ class Chip8:
         # Black and white display. 64 x 32 pixels (2048 total)
         # 0 - off
         # 1 - on
-        self.video_memory = [0] * 2048
+        self.video_memory = []
+        for row in range(DISPLAY_HEIGHT):
+            self.video_memory.append([0] * DISPLAY_WIDTH)
         self.should_draw = False
 
         # V0, V1,,, VE
@@ -81,6 +86,8 @@ class Chip8:
             return self.set_register_const
         elif (opcode & 0xF000) == 0xA000:
             return self.set_index
+        elif (opcode & 0xF000) == 0xD000:
+            return self.draw_sprite
         else:
             return self.not_implemented_instr
 
@@ -111,6 +118,33 @@ class Chip8:
         if DEBUG:
             print(format(opcode, '02x'))
             print(f"Constant Value: {const}")
+
+    def draw_sprite(self, opcode):
+        print("Draw Sprite")
+        x = self.registers[(opcode & 0x0F00) >> 8]
+        y = self.registers[(opcode & 0x00F0) >> 4]
+        height = opcode & 0x000F
+        for sprite_row in range(height):
+            sprite_line = self.memory[self.index + sprite_row]
+            bits = byte_to_bits(sprite_line)
+            for ind, bit in enumerate(bits):
+                row = y + sprite_row
+                col = x + ind
+                if bit:
+                    if self.video_memory[row][col]:
+                        self.video_memory[row][col] = 0
+                        self.registers[0xF] = 1
+                    else:
+                        self.video_memory[row][col] = 1
+
+        self.should_draw = True
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"X: {x}")
+            print(f"Y: {y}")
+            print(f"Height: {height}")
 
     def not_implemented_instr(self, opcode):
         print(f"Not implemented opcode: {format(opcode, '02x')}")

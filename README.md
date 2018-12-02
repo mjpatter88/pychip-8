@@ -1,6 +1,8 @@
 * Install `pyxel` dependencies - [https://github.com/kitao/pyxel#how-to-install]
 * Install project dependencies - `pipenv install`
 
+View a rom in hex - `xxd file_name.ch8`
+
 
 Useful resources:
 * https://en.wikipedia.org/wiki/CHIP-8#Opcode_table
