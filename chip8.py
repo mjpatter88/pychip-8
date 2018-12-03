@@ -3,8 +3,12 @@ DISPLAY_WIDTH = 64
 DISPLAY_HEIGHT = 32
 DEBUG = False
 
+ibm = "ibm-logo.ch8"
+ch8 = "chip8-logo.ch8"
+zero = "ZeroDemo_zeroZshadow_2007.ch8"
+
 class Chip8:
-    def __init__(self, rom_file="ibm-logo.ch8"):
+    def __init__(self, rom_file=zero):
         # 0x000-0x1FF - Chip 8 interpreter (contains font set in emu)
         # 0x050-0x0A0 - Used for the built in 4x5 pixel font set (0-F)
         # 0x200-0xFFF - Program ROM and work RAM
@@ -74,6 +78,8 @@ class Chip8:
         instr(self.opcode)
 
         # Update timers
+        if self.delay_timer > 0:
+            self.delay_timer -= 1
 
 
     def decode(self, opcode):
@@ -87,6 +93,8 @@ class Chip8:
             return self.set_index
         elif (opcode & 0xF000) == 0xD000:
             return self.draw_sprite
+        elif (opcode & 0xF0FF) == 0xF015:
+            return self.set_delay_timer
         else:
             return self.not_implemented_instr
 
@@ -131,6 +139,20 @@ class Chip8:
         if DEBUG:
             print(format(opcode, '02x'))
             print(f"Constant Value: {const}")
+            print()
+
+    def set_delay_timer(self, opcode):
+        print("Set Delay Timer")
+        reg_index = (opcode & 0x0F00) >> 8
+        value = self.registers[reg_index]
+
+        self.delay_timer = value
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register: {reg_index}")
+            print(f"Value: {value}")
             print()
 
     def draw_sprite(self, opcode):
