@@ -6,9 +6,10 @@ DEBUG = False
 ibm = "ibm-logo.ch8"
 ch8 = "chip8-logo.ch8"
 zero = "ZeroDemo_zeroZshadow_2007.ch8"
+tetris = "tetris.ch8"
 
 class Chip8:
-    def __init__(self, rom_file=zero):
+    def __init__(self, rom_file=tetris):
         # 0x000-0x1FF - Chip 8 interpreter (contains font set in emu)
         # 0x050-0x0A0 - Used for the built in 4x5 pixel font set (0-F)
         # 0x200-0xFFF - Program ROM and work RAM
@@ -85,6 +86,10 @@ class Chip8:
     def decode(self, opcode):
         if opcode == 0x00E0:
             return self.disp_clear
+        elif opcode == 0x00EE:
+            return self.return_from_subroutine
+        elif (opcode & 0xF000) == 0x2000:
+            return self.call_subroutine
         elif (opcode & 0xF000) == 0x6000:
             return self.set_register_const
         elif (opcode & 0xF000) == 0x7000:
@@ -139,6 +144,32 @@ class Chip8:
         if DEBUG:
             print(format(opcode, '02x'))
             print(f"Constant Value: {const}")
+            print()
+
+    def call_subroutine(self, opcode):
+        print("Call Subroutine")
+        addr = opcode & 0x0FFF
+        self.stack[self.stack_pointer] = self.pc
+        self.stack_pointer += 1
+        self.pc = addr
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Address: {addr}")
+            print()
+
+    def return_from_subroutine(self, opcode):
+        print("Return From Subroutine")
+
+        # value stored on stack is the calling address, we want the instruction after that so we add 2. 
+        # stack pointer points to next open spot, so we subtract 1 to get last item on stack.
+        addr = self.stack[self.stack_pointer - 1] + 2
+        self.stack_pointer -= 1
+        self.pc = addr
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Address: {addr}")
             print()
 
     def set_delay_timer(self, opcode):

@@ -19,6 +19,6 @@ class App:
             for y, row in enumerate(self.chip.video_memory):
                 for x, col in enumerate(row):
                     if col:
-                        pyxel.pix(x, y, 11)
+                        pyxel.pix(x, y, 7)
 
 App()

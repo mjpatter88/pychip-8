@@ -8,3 +8,4 @@ Useful resources:
 * https://en.wikipedia.org/wiki/CHIP-8#Opcode_table
 * http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/
 * https://github.com/dmatlack/chip8/tree/master/roms
+* https://rawgit.com/alexanderdickson/Chip-8-Emulator/master/index.html
