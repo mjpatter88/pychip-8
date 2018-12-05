@@ -88,8 +88,12 @@ class Chip8:
             return self.disp_clear
         elif opcode == 0x00EE:
             return self.return_from_subroutine
+        elif (opcode & 0xF000) == 0x1000:
+            return self.jump_to_constant
         elif (opcode & 0xF000) == 0x2000:
             return self.call_subroutine
+        elif (opcode & 0xF000) == 0x3000:
+            return self.skip_if_equal
         elif (opcode & 0xF000) == 0x6000:
             return self.set_register_const
         elif (opcode & 0xF000) == 0x7000:
@@ -158,6 +162,16 @@ class Chip8:
             print(f"Address: {addr}")
             print()
 
+    def jump_to_constant(self, opcode):
+        print("Jump To Constant")
+        const = opcode & 0x0FFF
+        self.pc = const
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Address: {const}")
+            print()
+
     def return_from_subroutine(self, opcode):
         print("Return From Subroutine")
 
@@ -184,6 +198,24 @@ class Chip8:
             print(format(opcode, '02x'))
             print(f"Register: {reg_index}")
             print(f"Value: {value}")
+            print()
+
+    def skip_if_equal(self, opcode):
+        print("Skip If Equal")
+        reg_index = (opcode & 0x0F00) >> 8
+        value = self.registers[reg_index]
+        const = opcode & 0x00FF
+
+        if const == value:
+            self.pc += 4
+        else:
+            self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register: {reg_index}")
+            print(f"Value: {value}")
+            print(f"Const: {const}")
             print()
 
     def draw_sprite(self, opcode):
