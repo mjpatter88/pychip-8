@@ -1,3 +1,4 @@
+![Chip 8](images/ch8.jpg?raw=true "Chip 8")
 ![Logo Drawing](images/ibm-logo.jpg?raw=true "IBM Logo")
 
 
@@ -20,7 +21,7 @@ Instructions:
 * 1NNN - DONE
 * 2NNN - DONE
 * 3XNN - DONE
-* 4XNN
+* 4XNN - DONE
 * 5XY0
 * 6XNN - DONE
 * 7XNN - DONE
@@ -44,7 +45,7 @@ Instructions:
 * FX0A
 * FX15 - DONE
 * FX18
-* FX1E
+* FX1E - DONE
 * FX29
 * FX33
 * FX55

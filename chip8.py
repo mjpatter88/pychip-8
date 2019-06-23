@@ -94,6 +94,8 @@ class Chip8:
             return self.call_subroutine
         elif (opcode & 0xF000) == 0x3000:
             return self.skip_if_equal
+        elif (opcode & 0xF000) == 0x4000:
+            return self.skip_if_not_equal
         elif (opcode & 0xF000) == 0x6000:
             return self.set_register_const
         elif (opcode & 0xF000) == 0x7000:
@@ -104,6 +106,8 @@ class Chip8:
             return self.draw_sprite
         elif (opcode & 0xF0FF) == 0xF015:
             return self.set_delay_timer
+        elif (opcode & 0xF0FF) == 0xF01E:
+            return self.add_index
         else:
             return self.not_implemented_instr
 
@@ -132,7 +136,7 @@ class Chip8:
         const = opcode & 0x00FF
         result = self.registers[reg_index] + const
         # Silently overflow per the spec.
-        self.registers[reg_index] = (result % 256)  
+        self.registers[reg_index] = result % (2**8)
         self.pc += 2
 
         if DEBUG:
@@ -150,6 +154,26 @@ class Chip8:
         if DEBUG:
             print(format(opcode, '02x'))
             print(f"Constant Value: {const}")
+            print()
+
+    def add_index(self, opcode):
+        print("Add to Index")
+        reg_index = (opcode & 0x0F00) >> 8
+        value = self.registers[reg_index]
+        result = self.index + value
+        # The index register is 16 bits.
+        self.index = result % (2 ** 16)
+        # Set overflow if it occured, clear overflow otherwise
+        if result >= 2**16:
+            self.registers[15] = 1
+        else:
+            self.registers[15] = 0
+
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register Index: {reg_index}")
             print()
 
     def call_subroutine(self, opcode):
@@ -209,6 +233,24 @@ class Chip8:
         const = opcode & 0x00FF
 
         if const == value:
+            self.pc += 4
+        else:
+            self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register: {reg_index}")
+            print(f"Value: {value}")
+            print(f"Const: {const}")
+            print()
+
+    def skip_if_not_equal(self, opcode):
+        print("Skip If Not Equal")
+        reg_index = (opcode & 0x0F00) >> 8
+        value = self.registers[reg_index]
+        const = opcode & 0x00FF
+
+        if const != value:
             self.pc += 4
         else:
             self.pc += 2
