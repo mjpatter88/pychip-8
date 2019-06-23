@@ -1,3 +1,6 @@
+![Logo Drawing](images/ibm-logo.jpg?raw=true "IBM Logo")
+
+
 * Install `pyxel` dependencies - [https://github.com/kitao/pyxel#how-to-install]
 * Install project dependencies - `pipenv install`
 
