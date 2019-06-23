@@ -130,7 +130,9 @@ class Chip8:
         print("Add Constant to Register")
         reg_index = (opcode & 0x0F00) >> 8
         const = opcode & 0x00FF
-        self.registers[reg_index] += const
+        result = self.registers[reg_index] + const
+        # Silently overflow per the spec.
+        self.registers[reg_index] = (result % 256)  
         self.pc += 2
 
         if DEBUG:
@@ -223,6 +225,13 @@ class Chip8:
         x = self.registers[(opcode & 0x0F00) >> 8]
         y = self.registers[(opcode & 0x00F0) >> 4]
         height = opcode & 0x000F
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"X: {x}")
+            print(f"Y: {y}")
+            print(f"Height: {height}")
+            print()
+
         for sprite_row in range(height):
             sprite_line = self.memory[self.index + sprite_row]
             bits = byte_to_bits(sprite_line)
@@ -239,12 +248,6 @@ class Chip8:
         self.should_draw = True
         self.pc += 2
 
-        if DEBUG:
-            print(format(opcode, '02x'))
-            print(f"X: {x}")
-            print(f"Y: {y}")
-            print(f"Height: {height}")
-            print()
 
     def not_implemented_instr(self, opcode):
         print(f"Not implemented opcode: {format(opcode, '02x')}")
