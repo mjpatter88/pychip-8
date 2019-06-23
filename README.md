@@ -1,4 +1,5 @@
 ![Chip 8](images/ch8.jpg?raw=true "Chip 8")
+![Zero](images/zero.jpg?raw=true "Zero")
 ![Logo Drawing](images/ibm-logo.jpg?raw=true "IBM Logo")
 
 
@@ -29,7 +30,7 @@ Instructions:
 * 8XY1
 * 8XY2
 * 8XY3
-* 8XY4
+* 8XY4 - DONE
 * 8XY5
 * 8XY6
 * 8XY7
