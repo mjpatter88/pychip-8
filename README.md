@@ -38,7 +38,7 @@ Instructions:
 * 9XY0
 * ANNN - DONE
 * BNNN
-* CXNN
+* CXNN - DONE
 * DXYN - DONE
 * EX9E
 * EXA1

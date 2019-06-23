@@ -1,3 +1,4 @@
+import random
 from utils import byte_to_bits
 DISPLAY_WIDTH = 64
 DISPLAY_HEIGHT = 32
@@ -104,6 +105,8 @@ class Chip8:
             return self.add_registers
         elif (opcode & 0xF000) == 0xA000:
             return self.set_index
+        elif (opcode & 0xF000) == 0xC000:
+            return self.set_register_random
         elif (opcode & 0xF000) == 0xD000:
             return self.draw_sprite
         elif (opcode & 0xF0FF) == 0xF015:
@@ -131,6 +134,23 @@ class Chip8:
             print(f"Register Index: {reg_index}")
             print(f"Constant Value: {const}")
             print()
+
+    def set_register_random(self, opcode):
+        print("Set register to random")
+        reg_index = (opcode & 0x0F00) >> 8
+        const = opcode & 0x00FF
+        rand = random.randint(0, ((2**8) - 1))
+        self.registers[reg_index] = rand & const
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register Index: {reg_index}")
+            print(f"Constant Value: {const}")
+            print(f"Randomly Generated Value: {rand}")
+            print()
+
+
 
     def add_register_const(self, opcode):
         print("Add Constant to Register")
