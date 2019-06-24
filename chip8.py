@@ -35,17 +35,14 @@ class Chip8:
         self.opcode = None
         self.pc = 0x200 # Program rom gets loaded into memory starting at 0x200
 
-        # It is important to know that the Chip 8 instruction set has opcodes that allow the program to jump to a certain address or call a subroutine.
-        # While the specification don’t mention a stack, you will need to implement one as part of the interpreter yourself.
-        # The stack is used to remember the current location before a jump is performed.
-        # So anytime you perform a jump or call a subroutine, store the program counter in the stack before proceeding.
-        # The system has 16 levels of stack and in order to remember which level of the stack is used, you need to implement a stack pointer (sp).
+        # Chip 8 doesn't actually specify a stack, but it does have opcodes to call a subroutine and return from one.
+        # A stack and stack pointer is a straightforward implemenation to support this behavior.
         self.stack = [0] * 16
         self.stack_pointer = 0
 
         # Hex based keypad.
-        # Store the state of each key
-        self.keys = [0] * 16
+        # Store the state of each key (False = not pressed, True = pressed)
+        self.keys = [False] * 16
 
         self.load_rom(rom_file)
 
@@ -57,6 +54,12 @@ class Chip8:
                 self.memory[mem_index] = byte
                 mem_index += 1
 
+    def set_key(self, key):
+        """ Sets a key to 'pressed'. The key handling opcode is responsible for setting it back to 'not pressed'."""
+        print(f"Set key {key}")
+        assert 0 <= key and 15 >= key, "Key must be between 0 and 15."
+        self.keys[key] = True
+
     def dump_memory(self):
         # Words are 16 bits each.
         # Print in hex
@@ -65,6 +68,12 @@ class Chip8:
             value = self.memory[mem_index] << 8 | self.memory[mem_index + 1]
             print(format(value, '02x'), end=',')
             mem_index += 2
+        print()
+
+    def dump_registers(self):
+        print("Registers: ")
+        for index, reg in enumerate(self.registers):
+            print(f"{index}: {reg}")
         print()
 
     def step(self):
@@ -109,6 +118,10 @@ class Chip8:
             return self.set_register_random
         elif (opcode & 0xF000) == 0xD000:
             return self.draw_sprite
+        elif (opcode & 0xF0FF) == 0xE09E:
+            return self.skip_if_pressed
+        elif (opcode & 0xF0FF) == 0xE0A1:
+            return self.skip_if_not_pressed
         elif (opcode & 0xF0FF) == 0xF015:
             return self.set_delay_timer
         elif (opcode & 0xF0FF) == 0xF01E:
@@ -305,6 +318,48 @@ class Chip8:
             print(f"Const: {const}")
             print()
 
+    def skip_if_pressed(self, opcode):
+        print("Skip If Key Pressed")
+        reg_index = (opcode & 0x0F00) >> 8
+        value = self.registers[reg_index]
+        pressed = self.keys[value]
+
+        if pressed:
+            self.pc += 4
+        else:
+            self.pc += 2
+
+        # Reset key value after it's processed
+        self.keys[value] = False
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register: {reg_index}")
+            print(f"Value: {value}")
+            print(f"Pressed: {pressed}")
+            print()
+
+
+    def skip_if_not_pressed(self, opcode):
+        print("Skip If Key Not Pressed")
+        reg_index = (opcode & 0x0F00) >> 8
+        value = self.registers[reg_index]
+        pressed = self.keys[value]
+
+        if not pressed:
+            self.pc += 4
+        else:
+            self.pc += 2
+
+        # Reset key value after it's processed
+        self.keys[value] = False
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register: {reg_index}")
+            print(f"Value: {value}")
+            print(f"Pressed: {pressed}")
+            print()
+
+
     def draw_sprite(self, opcode):
         print("Draw Sprite")
         x = self.registers[(opcode & 0x0F00) >> 8]
@@ -336,6 +391,7 @@ class Chip8:
 
     def not_implemented_instr(self, opcode):
         print(f"Not implemented opcode: {format(opcode, '02x')}")
+        self.dump_registers()
         self.pc += 2
 
     def gen_blank_video_memory(self):

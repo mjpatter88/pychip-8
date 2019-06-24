@@ -14,6 +14,7 @@ Useful resources:
 * http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/
 * https://github.com/dmatlack/chip8/tree/master/roms
 * https://rawgit.com/alexanderdickson/Chip-8-Emulator/master/index.html
+* http://mattmik.com/files/chip8/mastering/chip8.html
 
 Instructions:
 * 0NNN
@@ -40,8 +41,8 @@ Instructions:
 * BNNN
 * CXNN - DONE
 * DXYN - DONE
-* EX9E
-* EXA1
+* EX9E - DONE
+* EXA1 - DONE
 * FX07
 * FX0A
 * FX15 - DONE
