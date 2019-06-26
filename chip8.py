@@ -115,6 +115,8 @@ class Chip8:
             return self.set_register_register
         elif (opcode & 0xF00F) == 0x8004:
             return self.add_registers
+        elif (opcode & 0xF00F) == 0x9000:
+            return self.skip_if_not_equal_registers
         elif (opcode & 0xF000) == 0xA000:
             return self.set_index
         elif (opcode & 0xF000) == 0xC000:
@@ -345,6 +347,23 @@ class Chip8:
             print(f"Register: {reg_index}")
             print(f"Value: {value}")
             print(f"Const: {const}")
+            print()
+
+    def skip_if_not_equal_registers(self, opcode):
+        print("Skip If Not Equal Registers")
+        x_index = (opcode & 0x0F00) >> 8
+        y_index = (opcode & 0x00F0) >> 4
+
+        if self.registers[x_index] != self.registers[y_index]:
+            self.pc += 4
+        else:
+            self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register Index: {x_index}")
+            print(f"Register Index: {y_index}")
+            self.dump_registers()
             print()
 
     def skip_if_pressed(self, opcode):
