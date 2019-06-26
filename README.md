@@ -30,7 +30,7 @@ Instructions:
 * 5XY0
 * 6XNN - DONE
 * 7XNN - DONE
-* 8XY0
+* 8XY0 - DONE
 * 8XY1
 * 8XY2
 * 8XY3
@@ -46,7 +46,7 @@ Instructions:
 * DXYN - DONE
 * EX9E - DONE
 * EXA1 - DONE
-* FX07
+* FX07 - DONE
 * FX0A
 * FX15 - DONE
 * FX18
