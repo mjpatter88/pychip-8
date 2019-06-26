@@ -27,7 +27,7 @@ Instructions:
 * 2NNN - DONE
 * 3XNN - DONE
 * 4XNN - DONE
-* 5XY0
+* 5XY0 - DONE
 * 6XNN - DONE
 * 7XNN - DONE
 * 8XY0 - DONE
