@@ -122,6 +122,8 @@ class Chip8:
             return self.skip_if_pressed
         elif (opcode & 0xF0FF) == 0xE0A1:
             return self.skip_if_not_pressed
+        elif (opcode & 0xF0FF) == 0xF007:
+            return self.set_register_timer
         elif (opcode & 0xF0FF) == 0xF015:
             return self.set_delay_timer
         elif (opcode & 0xF0FF) == 0xF01E:
@@ -148,6 +150,18 @@ class Chip8:
             print(f"Constant Value: {const}")
             print()
 
+    def set_register_timer(self, opcode):
+        print("Set Register to Timer")
+        reg_index = (opcode & 0x0F00) >> 8
+        self.registers[reg_index] = self.delay_timer
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register Index: {reg_index}")
+            print(f"Timer Value: {self.delay_timer}")
+            print()
+
     def set_register_random(self, opcode):
         print("Set register to random")
         reg_index = (opcode & 0x0F00) >> 8
@@ -162,8 +176,6 @@ class Chip8:
             print(f"Constant Value: {const}")
             print(f"Randomly Generated Value: {rand}")
             print()
-
-
 
     def add_register_const(self, opcode):
         print("Add Constant to Register")
