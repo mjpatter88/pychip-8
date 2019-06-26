@@ -117,6 +117,10 @@ class Chip8:
             return self.set_register_register
         elif (opcode & 0xF00F) == 0x8001:
             return self.or_registers
+        elif (opcode & 0xF00F) == 0x8002:
+            return self.and_registers
+        elif (opcode & 0xF00F) == 0x8003:
+            return self.xor_registers
         elif (opcode & 0xF00F) == 0x8004:
             return self.add_registers
         elif (opcode & 0xF00F) == 0x9000:
@@ -240,6 +244,38 @@ class Chip8:
         x_index = (opcode & 0x0F00) >> 8
         y_index = (opcode & 0x00F0) >> 4
         result = self.registers[x_index] | self.registers[y_index]
+        self.registers[x_index] = result
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            self.dump_registers()
+            print(f"Register Index: {x_index}")
+            print(f"Register Index: {y_index}")
+            self.dump_registers()
+            print()
+
+    def and_registers(self, opcode):
+        print("Set register to logical and of self and register")
+        x_index = (opcode & 0x0F00) >> 8
+        y_index = (opcode & 0x00F0) >> 4
+        result = self.registers[x_index] & self.registers[y_index]
+        self.registers[x_index] = result
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            self.dump_registers()
+            print(f"Register Index: {x_index}")
+            print(f"Register Index: {y_index}")
+            self.dump_registers()
+            print()
+
+    def xor_registers(self, opcode):
+        print("Set register to logical xor of self and register")
+        x_index = (opcode & 0x0F00) >> 8
+        y_index = (opcode & 0x00F0) >> 4
+        result = self.registers[x_index] ^ self.registers[y_index]
         self.registers[x_index] = result
         self.pc += 2
 
