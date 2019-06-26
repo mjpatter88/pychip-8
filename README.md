@@ -31,7 +31,7 @@ Instructions:
 * 6XNN - DONE
 * 7XNN - DONE
 * 8XY0 - DONE
-* 8XY1
+* 8XY1 - DONE
 * 8XY2
 * 8XY3
 * 8XY4 - DONE
@@ -39,7 +39,7 @@ Instructions:
 * 8XY6
 * 8XY7
 * 8XYE
-* 9XY0
+* 9XY0 - DONE
 * ANNN - DONE
 * BNNN
 * CXNN - DONE

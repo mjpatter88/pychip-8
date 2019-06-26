@@ -113,6 +113,8 @@ class Chip8:
             return self.add_register_const
         elif (opcode & 0xF00F) == 0x8000:
             return self.set_register_register
+        elif (opcode & 0xF00F) == 0x8001:
+            return self.or_registers
         elif (opcode & 0xF00F) == 0x8004:
             return self.add_registers
         elif (opcode & 0xF00F) == 0x9000:
@@ -231,6 +233,21 @@ class Chip8:
             print(f"Register Index: {y_index}")
             print()
 
+    def or_registers(self, opcode):
+        print("Set register to logical or of self and register")
+        x_index = (opcode & 0x0F00) >> 8
+        y_index = (opcode & 0x00F0) >> 4
+        result = self.registers[x_index] | self.registers[y_index]
+        self.registers[x_index] = result
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            self.dump_registers()
+            print(f"Register Index: {x_index}")
+            print(f"Register Index: {y_index}")
+            self.dump_registers()
+            print()
 
     def set_index(self, opcode):
         print("Set Index")
