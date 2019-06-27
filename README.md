@@ -35,7 +35,7 @@ Instructions:
 * 8XY2 - DONE
 * 8XY3 - DONE
 * 8XY4 - DONE
-* 8XY5
+* 8XY5 - DONE
 * 8XY6
 * 8XY7
 * 8XYE
