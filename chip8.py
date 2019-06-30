@@ -147,6 +147,10 @@ class Chip8:
             return self.set_delay_timer
         elif (opcode & 0xF0FF) == 0xF01E:
             return self.add_index
+        elif (opcode & 0xF0FF) == 0xF055:
+            return self.mem_dump
+        elif (opcode & 0xF0FF) == 0xF065:
+            return self.mem_read
         else:
             return self.not_implemented_instr
 
@@ -518,7 +522,6 @@ class Chip8:
             print(f"Pressed: {pressed}")
             print()
 
-
     def skip_if_not_pressed(self, opcode):
         print("Skip If Key Not Pressed")
         reg_index = (opcode & 0x0F00) >> 8
@@ -537,6 +540,36 @@ class Chip8:
             print(f"Register: {reg_index}")
             print(f"Value: {value}")
             print(f"Pressed: {pressed}")
+            print()
+
+    def mem_dump(self, opcode):
+        print("Dumping to Memory")
+        reg_index = (opcode & 0x0F00) >> 8
+        index = self.index
+        for val in self.registers[:reg_index + 1]:
+            self.memory[index] = val
+            index += 1
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register: {reg_index}")
+            print(f"I: {self.index}")
+            print()
+
+    def mem_read(self, opcode):
+        print("Reading from Memory")
+        reg_x = (opcode & 0x0F00) >> 8
+        index = self.index
+        for reg_index in range(0, reg_x + 1):
+            self.registers[reg_index] = self.memory[self.index]
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register: {reg_x}")
+            print(f"I: {self.index}")
+            self.dump_registers()
             print()
 
 
@@ -567,7 +600,6 @@ class Chip8:
 
         self.should_draw = True
         self.pc += 2
-
 
     def not_implemented_instr(self, opcode):
         print(f"Not implemented opcode: {format(opcode, '02x')}")
