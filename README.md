@@ -36,9 +36,9 @@ Instructions:
 * 8XY3 - DONE
 * 8XY4 - DONE
 * 8XY5 - DONE
-* 8XY6
+* 8XY6 - DONE
 * 8XY7
-* 8XYE
+* 8XYE - DONE
 * 9XY0 - DONE
 * ANNN - DONE
 * BNNN

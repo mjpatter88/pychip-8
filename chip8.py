@@ -125,6 +125,10 @@ class Chip8:
             return self.add_registers
         elif (opcode & 0xF00F) == 0x8005:
             return self.sub_registers
+        elif (opcode & 0xF00F) == 0x8006:
+            return self.shift_right
+        elif (opcode & 0xF00F) == 0x800E:
+            return self.shift_left
         elif (opcode & 0xF00F) == 0x9000:
             return self.skip_if_not_equal_registers
         elif (opcode & 0xF000) == 0xA000:
@@ -259,6 +263,40 @@ class Chip8:
             print(format(opcode, '02x'))
             print(f"Register Index: {x_index}")
             print(f"Register Index: {y_index}")
+            print()
+
+    def shift_right(self, opcode):
+        print("Shift register right")
+        reg_index = (opcode & 0x0F00) >> 8
+        value = self.registers[reg_index]
+
+        lsb = value & 0b1
+        self.registers[15] = lsb
+        self.registers[reg_index] = value >> 1
+
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register Index: {reg_index}")
+            self.dump_registers()
+            print()
+
+    def shift_left(self, opcode):
+        print("Shift register left")
+        reg_index = (opcode & 0x0F00) >> 8
+        value = self.registers[reg_index]
+
+        msb = (value & 0b10000000) >> 7
+        self.registers[15] = msb
+        self.registers[reg_index] = (value << 1) % (2**8)
+
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register Index: {reg_index}")
+            self.dump_registers()
             print()
 
     def or_registers(self, opcode):
