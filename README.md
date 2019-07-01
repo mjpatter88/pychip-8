@@ -52,6 +52,6 @@ Instructions:
 * FX18
 * FX1E - DONE
 * FX29
-* FX33
+* FX33 - DONE
 * FX55 - DONE
 * FX65 - DONE

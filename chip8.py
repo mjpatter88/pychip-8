@@ -147,6 +147,8 @@ class Chip8:
             return self.set_delay_timer
         elif (opcode & 0xF0FF) == 0xF01E:
             return self.add_index
+        elif (opcode & 0xF0FF) == 0xF033:
+            return self.store_bcd
         elif (opcode & 0xF0FF) == 0xF055:
             return self.mem_dump
         elif (opcode & 0xF0FF) == 0xF065:
@@ -542,8 +544,31 @@ class Chip8:
             print(f"Pressed: {pressed}")
             print()
 
+    def store_bcd(self, opcode):
+        print("Store BCD to Memory")
+        reg_index = (opcode & 0x0F00) >> 8
+        value = self.registers[reg_index]
+
+        hundreds_digit = value // 100
+        tens_digit = (value % 100) // 10
+        ones_digit = value % 10
+
+        self.memory[self.index] = hundreds_digit
+        self.memory[self.index + 1] = tens_digit
+        self.memory[self.index + 2] = ones_digit
+
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register: {reg_index}")
+            print(f"I: {self.index}")
+            self.dump_registers()
+            self.dump_memory()
+            print()
+
     def mem_dump(self, opcode):
-        print("Dumping to Memory")
+        print("Dump to Memory")
         reg_index = (opcode & 0x0F00) >> 8
         index = self.index
         for val in self.registers[:reg_index + 1]:
@@ -558,11 +583,11 @@ class Chip8:
             print()
 
     def mem_read(self, opcode):
-        print("Reading from Memory")
+        print("Read from Memory")
         reg_x = (opcode & 0x0F00) >> 8
         index = self.index
-        for reg_index in range(0, reg_x + 1):
-            self.registers[reg_index] = self.memory[self.index]
+        for index in range(0, reg_x + 1):
+            self.registers[index] = self.memory[self.index + index]
         self.pc += 2
 
         if DEBUG:
