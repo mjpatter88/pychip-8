@@ -11,7 +11,7 @@ test = "test_opcode.ch8"
 tetris = "tetris.ch8"
 
 class Chip8:
-    def __init__(self, rom_file=test):
+    def __init__(self, rom_file=tetris):
         # 0x000-0x1FF - Chip 8 interpreter (contains font set in emu)
         # 0x050-0x0A0 - Used for the built in 4x5 pixel font set (0-F)
         # 0x200-0xFFF - Program ROM and work RAM
@@ -610,6 +610,7 @@ class Chip8:
             print(f"Height: {height}")
             print()
 
+        self.registers[0xF] = 0
         for sprite_row in range(height):
             sprite_line = self.memory[self.index + sprite_row]
             bits = byte_to_bits(sprite_line)
