@@ -4,7 +4,7 @@
 
 
 * Install `pyxel` dependencies - [https://github.com/kitao/pyxel#how-to-install]
-* Install project dependencies - `pipenv install`
+* Install project dependencies - `pipenv install` or `pip install pyxel`
 
 View a rom in hex - `xxd file_name.ch8`
 
@@ -19,6 +19,18 @@ Useful resources:
 * https://github.com/mattmikolay/chip-8/wiki/CHIP%E2%80%908-Technical-Reference
 * https://github.com/mattmikolay/chip-8/wiki/CHIP%E2%80%908-Instruction-Set
 * https://github.com/dmatlack/chip8/tree/master/roms
+
+Major Steps:
+1. Basic execution loop
+2. Read from rom into memory
+3. Fetch/Decode/Execute
+4. Draw video memory to screen
+5. Basic logic instructions
+6. Draw sprite instructions
+7. Flow control instructions
+8. Timers
+9. Input
+10. Font related instructions
 
 Instructions:
 * 0NNN
