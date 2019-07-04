@@ -22,8 +22,8 @@ KEY_MAP = {
 }
 
 class App:
-    def __init__(self):
-        self.chip = Chip8()
+    def __init__(self, rom_file):
+        self.chip = Chip8(rom_file)
         self.paused = False
 
         pyxel.init(64, 64, fps=100, scale=10)
@@ -54,4 +54,42 @@ class App:
                     else:
                         pyxel.pix(x, y+Y_OFFSET, 0)
 
-App()
+
+def get_rom_filename(default=None):
+    """
+    Get a rom filename using the following priority:
+    1. Default passed to this function.
+    2. Filename passed as command line arg
+    3. Display a file picker window for user input
+    """
+    import sys
+
+    if default:
+        return default
+    elif len(sys.argv) > 1:
+        return sys.argv[1]
+    else:
+        from tkinter import Tk
+        from tkinter.filedialog import askopenfilename
+
+        # prevent the root window from appearing
+        Tk().withdraw()
+        filename = askopenfilename()
+        return filename
+
+
+# Working roms
+ibm = "roms/ibm-logo.ch8"
+ch8 = "roms/chip8-logo.ch8"
+zero = "roms/ZeroDemo_zeroZshadow_2007.ch8"
+test = "roms/test_opcode.ch8"
+
+# Not yet working roms
+tetris = "roms/tetris.ch8"
+triange = "roms/Sierpinski.ch8"
+sqrt = "roms/SqrtTest.ch8"
+
+if __name__ == "__main__":
+    rom_file = get_rom_filename(tetris)
+    print(rom_file)
+    App(rom_file)

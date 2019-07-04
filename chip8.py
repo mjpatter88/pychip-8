@@ -4,19 +4,8 @@ DISPLAY_WIDTH = 64
 DISPLAY_HEIGHT = 32
 DEBUG = False
 
-# Working roms
-ibm = "ibm-logo.ch8"
-ch8 = "chip8-logo.ch8"
-zero = "ZeroDemo_zeroZshadow_2007.ch8"
-test = "test_opcode.ch8"
-
-# Not yet working roms
-tetris = "tetris.ch8"
-triange = "Sierpinski.ch8"
-sqrt = "SqrtTest.ch8"
-
 class Chip8:
-    def __init__(self, rom_file=tetris):
+    def __init__(self, rom_file):
         # 0x000-0x1FF - Chip 8 interpreter (contains font set in emu)
         # 0x050-0x0A0 - Used for the built in 4x5 pixel font set (0-F)
         # 0x200-0xFFF - Program ROM and work RAM
@@ -53,8 +42,7 @@ class Chip8:
         self.load_rom(rom_file)
 
     def load_rom(self, file_name):
-        file = f"roms/{file_name}"
-        with open(file, "rb") as rom:
+        with open(file_name, "rb") as rom:
             mem_index = 0x200 # Program rom gets loaded into memory starting at 0x200
             for byte in rom.read():
                 self.memory[mem_index] = byte
