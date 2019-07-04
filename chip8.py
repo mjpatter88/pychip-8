@@ -4,11 +4,16 @@ DISPLAY_WIDTH = 64
 DISPLAY_HEIGHT = 32
 DEBUG = False
 
+# Working roms
 ibm = "ibm-logo.ch8"
 ch8 = "chip8-logo.ch8"
 zero = "ZeroDemo_zeroZshadow_2007.ch8"
 test = "test_opcode.ch8"
+
+# Not yet working roms
 tetris = "tetris.ch8"
+triange = "Sierpinski.ch8"
+sqrt = "SqrtTest.ch8"
 
 class Chip8:
     def __init__(self, rom_file=tetris):

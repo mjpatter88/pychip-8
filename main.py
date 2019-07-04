@@ -26,7 +26,7 @@ class App:
         self.chip = Chip8()
         self.paused = False
 
-        pyxel.init(64, 64, fps=60, scale=10)
+        pyxel.init(64, 64, fps=100, scale=10)
         pyxel.run(self.update, self.draw)
 
     def update(self):
