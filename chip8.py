@@ -72,17 +72,12 @@ class Chip8:
 
     def step(self):
         print(f"PC: {self.pc}", end=" ")
-        # Fetch opcode
+
         self.opcode = self.memory[self.pc] << 8 | self.memory[self.pc + 1]
-
-        # Decode opcode
         instr = self.decode(self.opcode)
-
-        # Execute opcode
         self.should_draw = False # default to false, specific opcodes can override this
         instr(self.opcode)
 
-        # Update timers
         if self.delay_timer > 0:
             self.delay_timer -= 1
 
