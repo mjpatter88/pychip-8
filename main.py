@@ -25,8 +25,10 @@ class App:
     def __init__(self, rom_file):
         self.chip = Chip8(rom_file)
         self.paused = False
+        self.manual_step_mode = False
+        self.should_step = False
 
-        pyxel.init(64, 64, fps=100, scale=10)
+        pyxel.init(64, 64, fps=200, scale=10)
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -38,7 +40,16 @@ class App:
                 print("Paused.")
                 self.paused = True
 
-        if not self.paused:
+        # Use "n" to activate manual step mode
+        if pyxel.btnr(pyxel.KEY_N):
+            self.manual_step_mode = not self.manual_step_mode
+        # Step once per "m" key press
+        if pyxel.btnr(pyxel.KEY_M):
+            self.should_step = True
+        else:
+            self.should_step = False
+
+        if not self.paused and (self.should_step or not self.manual_step_mode):
             for key_in, chip8_key in KEY_MAP.items():
                 if pyxel.btnr(key_in):
                     self.chip.set_key(chip8_key)
@@ -85,11 +96,12 @@ zero = "roms/ZeroDemo_zeroZshadow_2007.ch8"
 test = "roms/test_opcode.ch8"
 
 # Not yet working roms
-tetris = "roms/tetris.ch8"
 triange = "roms/Sierpinski.ch8"
+tetris = "roms/tetris.ch8"
 sqrt = "roms/SqrtTest.ch8"
+airplane = "rom-lib/games/Airplane.ch8"
 
 if __name__ == "__main__":
-    rom_file = get_rom_filename(tetris)
+    rom_file = get_rom_filename(triange)
     print(rom_file)
     App(rom_file)

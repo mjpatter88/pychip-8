@@ -245,11 +245,13 @@ class Chip8:
         y_index = (opcode & 0x00F0) >> 4
         result = self.registers[x_index] - self.registers[y_index]
         self.registers[x_index] = result % (2**8)
-        # Set overflow bit if necessary
+
+        # Set overflow bit if necessary.
+        # NOTE: in this case, set V[F] if NOT borrow.
         if result < 0:
-            self.registers[15] = 1
-        else:
             self.registers[15] = 0
+        else:
+            self.registers[15] = 1
 
         self.pc += 2
 

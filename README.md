@@ -1,10 +1,13 @@
 ![Chip 8](images/ch8.jpg?raw=true "Chip 8")
 ![Zero](images/zero.jpg?raw=true "Zero")
 ![Logo Drawing](images/ibm-logo.jpg?raw=true "IBM Logo")
+![Triangles](images/tri.jpg?raw=true "Triangles")
 
 
 * Install `pyxel` dependencies - [https://github.com/kitao/pyxel#how-to-install]
 * Install project dependencies - `pipenv install` or `pip install pyxel`
+* Start emulating: `python main.py`
+* Use `p` to pause, `n` to enable manual stepping, and `m` to step once.
 
 View a rom in hex - `xxd file_name.ch8`
 
@@ -19,6 +22,7 @@ Useful resources:
 * https://github.com/mattmikolay/chip-8/wiki/CHIP%E2%80%908-Technical-Reference
 * https://github.com/mattmikolay/chip-8/wiki/CHIP%E2%80%908-Instruction-Set
 * https://github.com/dmatlack/chip8/tree/master/roms
+* http://www.cs.columbia.edu/~sedwards/classes/2016/4840-spring/designs/Chip8.pdf
 
 Major Steps:
 1. Basic execution loop
