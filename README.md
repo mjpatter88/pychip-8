@@ -2,6 +2,7 @@
 ![Zero](images/zero.jpg?raw=true "Zero")
 ![Logo Drawing](images/ibm-logo.jpg?raw=true "IBM Logo")
 ![Triangles](images/tri.jpg?raw=true "Triangles")
+![Square Root](images/sqrt.jpg?raw=true "Square Root")
 
 
 * Install `pyxel` dependencies - [https://github.com/kitao/pyxel#how-to-install]
@@ -68,7 +69,7 @@ Instructions:
 * FX15 - DONE
 * FX18
 * FX1E - DONE
-* FX29
+* FX29 - DONE
 * FX33 - DONE
 * FX55 - DONE
 * FX65 - DONE

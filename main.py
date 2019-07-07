@@ -28,7 +28,7 @@ class App:
         self.manual_step_mode = False
         self.should_step = False
 
-        pyxel.init(64, 64, fps=200, scale=10)
+        pyxel.init(64, 64, fps=100, scale=10)
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -94,14 +94,14 @@ ibm = "roms/ibm-logo.ch8"
 ch8 = "roms/chip8-logo.ch8"
 zero = "roms/ZeroDemo_zeroZshadow_2007.ch8"
 test = "roms/test_opcode.ch8"
+triange = "roms/Sierpinski.ch8"
+sqrt = "roms/SqrtTest.ch8"
 
 # Not yet working roms
-triange = "roms/Sierpinski.ch8"
 tetris = "roms/tetris.ch8"
-sqrt = "roms/SqrtTest.ch8"
 airplane = "rom-lib/games/Airplane.ch8"
 
 if __name__ == "__main__":
-    rom_file = get_rom_filename(triange)
+    rom_file = get_rom_filename(sqrt)
     print(rom_file)
     App(rom_file)

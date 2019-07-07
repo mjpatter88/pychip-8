@@ -1,5 +1,5 @@
 import random
-from utils import byte_to_bits
+from utils import byte_to_bits, sprite_to_bytes, SPRITE_DATA
 DISPLAY_WIDTH = 64
 DISPLAY_HEIGHT = 32
 DEBUG = False
@@ -40,6 +40,7 @@ class Chip8:
         self.keys = [False] * 16
 
         self.load_rom(rom_file)
+        self.load_sprites()
 
     def load_rom(self, file_name):
         with open(file_name, "rb") as rom:
@@ -47,6 +48,13 @@ class Chip8:
             for byte in rom.read():
                 self.memory[mem_index] = byte
                 mem_index += 1
+
+    def load_sprites(self):
+        for sprite_index, sprite in enumerate(SPRITE_DATA):
+            mem_index = sprite_index * 5;
+            sprite_bytes = sprite_to_bytes(sprite)
+            for index, byte in enumerate(sprite_bytes):
+                self.memory[mem_index + index] = byte
 
     def set_key(self, key):
         """ Sets a key to 'pressed'. The key handling opcode is responsible for setting it back to 'not pressed'."""
@@ -135,6 +143,8 @@ class Chip8:
             return self.set_delay_timer
         elif (opcode & 0xF0FF) == 0xF01E:
             return self.add_index
+        elif (opcode & 0xF0FF) == 0xF029:
+            return self.set_index_to_sprite
         elif (opcode & 0xF0FF) == 0xF033:
             return self.store_bcd
         elif (opcode & 0xF0FF) == 0xF055:
@@ -352,6 +362,24 @@ class Chip8:
         if DEBUG:
             print(format(opcode, '02x'))
             print(f"Constant Value: {const}")
+            print()
+
+    def set_index_to_sprite(self, opcode):
+        print("Set Index to Sprite")
+        # https://github.com/mattmikolay/chip-8/wiki/CHIP‐8-Technical-Reference#fonts
+        # Sprites start at 0x00 and each takes up 5 bytes
+        reg_index = (opcode & 0x0F00) >> 8
+        value = self.registers[reg_index]
+        sprite_location = value * 5
+
+        self.index = sprite_location
+        self.pc += 2
+
+        if DEBUG:
+            print(format(opcode, '02x'))
+            print(f"Register Index: {reg_index}")
+            print(f"Register Value: {value}")
+            print(f"Sprite Location: {sprite_location}")
             print()
 
     def add_index(self, opcode):
